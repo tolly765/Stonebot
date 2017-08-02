@@ -4,19 +4,11 @@ const client = new Discord.Client();
 
 client.login('tokenhere');
 
-var command = '!serverstatus';
+var command = '!ss';
 var servers = {
     "hub" : {
         "label" : "Hub",
         "port" : "24460"
-    },
-    "dw20" : {
-        "label" : "Direwolf20",
-        "port" : "24461"
-    },
-    "sf3" : {
-        "label" : "SkyFactory 3",
-        "port" : "24462"
     },
     "ultimate" : {
         "label" : "Ultimate",
@@ -26,6 +18,14 @@ var servers = {
         "label" : "Beyond",
         "port" : "24464"
     },
+    "age" : {
+        "label" : "Stone Age",
+        "port" : "24461"
+    },
+    "aoe" : {
+        "label" : "Age of Engineering",
+        "port" : "24468"
+    },
 };
 
 client.on('message', message => {
@@ -33,6 +33,9 @@ client.on('message', message => {
         var msgarr = message.content.split(" ");
         var server = msgarr[1];
         var reply = "";
+        
+        //remove author command invoke message (requires channel permission "MANAGE_MESSAGES")
+        message.delete().catch(err=>client.funcs.log(err, "error"));
         
         if (server === "all") {
             for (i in servers){
@@ -56,24 +59,23 @@ client.on('message', message => {
 
 function getStatus(port, label, cb) {
     mc.ping_fefd_udp({host: 'localhost', port: port}, function(err, response) {
-        if (err == null) {
+        if (err === null) {
             var playerlist = "";
             if (response.players.length > 0){
                 for (i in response.players){
                     if (i < response.players.length - 1){
-                        playerlist += response.players[i] + ", ";
+                        playerlist += response.players[i].replace(new RegExp("_", 'g'), "\\_") + ", ";
                     } else {
-                        playerlist += response.players[i];
+                        playerlist += response.players[i].replace(new RegExp("_", 'g'), "\\_");
                     }
                 }
             }
-            var reply = ":green_heart: " + label + " server is online! Players (" + response.numPlayers + "/" + response.maxPlayers +") " + playerlist;
+            var reply = ":white_check_mark: " + label + " is online! Players (" + response.numPlayers + "/" + response.maxPlayers +") " + playerlist;
             cb(reply);
         } else {
-            var reply = ":red_circle: " + label + " server is offline!";
+            var reply = ":x: " + label + " is offline!";
             cb(reply);
         }
-        //console.log(err, response);
     });
     
 }

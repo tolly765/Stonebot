@@ -30,52 +30,66 @@ var servers = {
 
 client.on('message', message => {
     if (message.channel.name != "serverchat" && message.content.startsWith(command)) {
-        var msgarr = message.content.split(" ");
-        var server = msgarr[1];
-        var reply = "";
-        
+        var embed = {
+                "color": 7844437,
+                "fields": [],
+                "timestamp": new Date().toISOString()
+            };
+
         //remove author command invoke message (requires channel permission "MANAGE_MESSAGES")
         message.delete().catch(err=>client.funcs.log(err, "error"));
         
-        if (server === "all") {
-            for (i in servers){
-                getStatus(servers[i].port, servers[i].label, function(response) {
-                    message.reply(response);
+        var serverCount = 0;
+        for (i in servers){
+            getStatus(servers[i].port, servers[i].label)
+                .then(function(msg) {
+                    serverCount++;
+                    embed.fields.push(msg)
+
+                    if(serverCount == Object.keys(servers).length){
+                      // console.log(embed);
+                      message.reply({embed});
+                    }
+                })
+                .catch(function(v) {
+                      // catching errors is overrated
                 });
-            }
-        } else if (typeof servers[server] === "undefined"){
-            for (i in servers){
-                reply += i + " ";
-            }
-            message.reply("Nope! Valid servers: " + reply);
-        } else {
-            getStatus(servers[server].port, servers[server].label, function(response) {
-                message.reply(response);
-            });
-        }
-        
+        } 
+
     }
 });
 
-function getStatus(port, label, cb) {
-    mc.ping_fefd_udp({host: 'localhost', port: port}, function(err, response) {
-        if (err === null) {
-            var playerlist = "";
-            if (response.players.length > 0){
-                for (i in response.players){
-                    if (i < response.players.length - 1){
-                        playerlist += response.players[i].replace(new RegExp("_", 'g'), "\\_") + ", ";
-                    } else {
-                        playerlist += response.players[i].replace(new RegExp("_", 'g'), "\\_");
+function getStatus(port, label) {
+    return new Promise(function(resolve, reject) {  
+        var reply = "";
+        var playerList = "";
+        mc.ping_fefd_udp({host: 'localhost', port: port}, function(err, response) {
+            if (err) {
+                // console.log('ping error', err);
+                reply = {
+                        "name": label + " Server Status :x:",
+                        "value": "Server is offline..",
+                      };
+                resolve(reply);
+            } else {
+                // console.log('gotit', response);
+                if (response.players.length > 0){
+                    for (i in response.players){
+                        if (i < response.players.length - 1){
+                            playerList += response.players[i].replace(new RegExp("_", 'g'), "\\_") + ", ";
+                        } else {
+                            playerList += response.players[i].replace(new RegExp("_", 'g'), "\\_");
+                        }
                     }
-                }
+                }              
+                reply = {
+                        "name": label + " Server Status :white_check_mark:",
+                        "value": "Players online (" + response.numPlayers + "/" + response.maxPlayers + ") " + playerList,
+                      };
+                resolve(reply);
             }
-            var reply = ":white_check_mark: " + label + " is online! Players (" + response.numPlayers + "/" + response.maxPlayers +") " + playerlist;
-            cb(reply);
-        } else {
-            var reply = ":x: " + label + " is offline!";
-            cb(reply);
-        }
+        });
+        
+        
     });
-    
 }

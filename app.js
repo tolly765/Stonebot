@@ -4,75 +4,57 @@ const client = new Discord.Client();
 
 client.login('tokenhere');
 
-var command = '!ss';
+var command = '!serverstatus';
 var servers = {
-    "hub" : {
-        "label" : "Hub",
-        "port" : "24460"
+    "server1" : {
+        "label" : "server1 name",
+        "port" : "25565"
     },
-    "ultimate" : {
-        "label" : "Ultimate",
-        "port" : "25567"
-    },
-    "beyond" : {
-        "label" : "Beyond",
-        "port" : "24464"
-    },
-    "age" : {
-        "label" : "Stone Age",
-        "port" : "24461"
-    },
-    "aoe" : {
-        "label" : "Age of Engineering",
-        "port" : "24468"
+    "server2" : {
+        "label" : "server2 bane",
+        "port" : "25566"
     },
 };
 
 client.on('message', message => {
     if (message.channel.name != "serverchat" && message.content.startsWith(command)) {
-        var embed = {
-                "color": 7844437,
-                "fields": [],
-                "timestamp": new Date().toISOString()
-            };
+        richembed = new Discord.RichEmbed()
+                .setColor("#77b255")
+                .setTimestamp();
 
         //remove author command invoke message (requires channel permission "MANAGE_MESSAGES")
-        message.delete().catch(err=>client.funcs.log(err, "error"));
-        
+        if (message.channel.type == "text") {
+            message.delete().catch(err => console.error(err));
+        }
+
         var serverCount = 0;
         for (i in servers){
             getStatus(servers[i].port, servers[i].label)
-                .then(function(msg) {
+                .then(function() {
                     serverCount++;
-                    embed.fields.push(msg)
+                    richembed.addField(title, status);
 
                     if(serverCount == Object.keys(servers).length){
                       // console.log(embed);
-                      message.reply({embed});
+                      message.reply("", {embed: richembed});
                     }
                 })
-                .catch(function(v) {
-                      // catching errors is overrated
+                .catch((err) => {
+                    console.error(err);
                 });
-        } 
-
+        }
     }
 });
 
 function getStatus(port, label) {
     return new Promise(function(resolve, reject) {  
-        var reply = "";
         var playerList = "";
         mc.ping_fefd_udp({host: 'localhost', port: port}, function(err, response) {
             if (err) {
-                // console.log('ping error', err);
-                reply = {
-                        "name": label + " Server Status :x:",
-                        "value": "Server is offline..",
-                      };
-                resolve(reply);
+                reply = title = label + " Server Status :x:",
+                        status = "Server is offline..";
+                resolve();
             } else {
-                // console.log('gotit', response);
                 if (response.players.length > 0){
                     for (i in response.players){
                         if (i < response.players.length - 1){
@@ -81,15 +63,11 @@ function getStatus(port, label) {
                             playerList += response.players[i].replace(new RegExp("_", 'g'), "\\_");
                         }
                     }
-                }              
-                reply = {
-                        "name": label + " Server Status :white_check_mark:",
-                        "value": "Players online (" + response.numPlayers + "/" + response.maxPlayers + ") " + playerList,
-                      };
-                resolve(reply);
+                }
+                reply = title = label + " Server Status :white_check_mark:",
+                        status = "Players online (" + response.numPlayers + "/" + response.maxPlayers + ") " + playerList;
+                resolve();
             }
         });
-        
-        
     });
 }

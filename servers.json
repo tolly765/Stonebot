@@ -1,0 +1,18 @@
+{
+    "hub" : {
+        "label" : "Hub",
+        "port" : "24460"
+    },
+    "ultimate" : {
+        "label" : "Ultimate",
+        "port" : "25567"
+    },
+    "server13" : {
+        "label" : "Continuum",
+        "port" : "24462"
+    },
+    "server5" : {
+        "label" : "Revelation",
+        "port" : "24461"
+    }
+}

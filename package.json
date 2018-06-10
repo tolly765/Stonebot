@@ -1,5 +1,5 @@
 {
-  "name": "mc-discord-serverstatus",
+  "name": "mc-serverstatus",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -10,7 +10,8 @@
   "author": "phit",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.0.0",
-    "minecraft-ping": "phit/node-minecraft-ping#patch-1"
+    "discord.js": "^11.1.0",
+    "minecraft-ping": "phit/node-minecraft-ping#patch-1",
+    "request": "^2.85.0"
   }
 }

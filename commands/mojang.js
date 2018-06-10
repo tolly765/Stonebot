@@ -4,7 +4,7 @@ module.exports = {
     name: 'mojang',
     description: 'Check the status of the Mojang servers',
     execute(message) {
-        var url = "https://mcapi.ca/mcstatus";
+        var url = 'https://mcapi.ca/mcstatus';
         request({
             url: url,
             json: true
@@ -22,9 +22,9 @@ module.exports = {
                     .setThumbnail('https://www.stonebound.net/assets/mojang.png')
                     .setURL('https://help.mojang.com/')
 
-                message.channel.send("", { embed: officialembded });
+                message.channel.send('', { embed: officialembded });
             } else {
-                message.channel.send("Could not connect to Mojang's API.");
+                message.channel.send('Could not connect to Mojang\'s API.');
             }
         });
         //message.channel.send(avatarList);

@@ -13,7 +13,7 @@ module.exports = {
     aliases: ['ss', 'servers'],
     execute(message, args) {
         richembed = new Discord.RichEmbed()
-            .setColor("#77b255")
+            .setColor('#77b255')
             .setTimestamp();
         if (!args.length) {
             var serverCount = 0;
@@ -25,7 +25,7 @@ module.exports = {
 
                         if (serverCount == Object.keys(servers).length) {
                             // console.log(embed);
-                            return message.channel.send("", { embed: richembed });
+                            return message.channel.send('', { embed: richembed });
                         }
                     })
                     .catch((err) => {
@@ -38,14 +38,14 @@ module.exports = {
             for (i in servers) {
                 avServers.push(servers[i].label);
             }
-            return message.channel.send("Available Servers: " + avServers.join(", "));
+            return message.channel.send('Available Servers: ' + avServers.join(', '));
         } else {
             const server = list.find(server => server.label.toLowerCase() && server.label.toLowerCase().includes(args[0].toLowerCase()))
-            if (!server) return message.channel.send("Invalid server!");
+            if (!server) return message.channel.send('Invalid server!');
             getStatus(server.port, server.label)
                 .then(function () {
                     richembed.addField(title, status);
-                    return message.channel.send("", { embed: richembed });
+                    return message.channel.send('', { embed: richembed });
                 })
                 .catch((err) => {
                     console.error(err);

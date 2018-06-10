@@ -19,6 +19,11 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+	if (message.channel.id == '314582461197582336' && message.content == 'nsfw') {
+		message.delete(1000)
+			.then(msg => msg.member.addRole('351179491973791745'))
+			.catch(console.error);
+	}
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 	if (message.channel.name == ignorechannel) return;
 

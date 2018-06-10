@@ -1,7 +1,7 @@
 {
-  "name": "mc-serverstatus",
-  "version": "1.0.0",
-  "description": "",
+  "name": "stonebot",
+  "version": "1.1.0",
+  "description": "Bot for the stonebound.net Discord server",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

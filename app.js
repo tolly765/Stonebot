@@ -58,7 +58,7 @@ client.on('message', message => {
 	const cooldownAmount = (command.cooldown || 10) * 1000;
 
 	if (message.author.id != 66235899918159872) {
-		if (!timestamps.haSs(message.author.id)) {
+		if (!timestamps.has(message.author.id)) {
 			timestamps.set(message.author.id, now);
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 		} else {

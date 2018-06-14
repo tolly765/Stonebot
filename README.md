@@ -1,2 +1,3 @@
-# discord-minecraft-serverstatus
-command for discord to check a minecraft servers player count
+# Stonebot
+
+A Discord bot for the stonebound.net server, mainly used to fetch the status of our gameservers
